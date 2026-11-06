@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sam's Research Walkthrough</title>
+<style>
+  :root {
+    --bg: #f6f5f1;
+    --surface: #ffffff;
+    --text: #1d1d1b;
+    --muted: #6b6a64;
+    --border: #e2e0d8;
+    --accent: #2f6fdf;
+    --accent-soft: #e8effc;
+    --user: #1d1d1b;
+    --user-text: #ffffff;
+    --note: #f1f0eb;
+    --correct: #b4462b;
+    --correct-soft: #fbece7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101114; --surface: #17181c; --text: #ecebe5; --muted: #a2a19a; --border: #2c2d33;
+      --accent: #8fb3ff; --accent-soft: #1d2740; --user: #ecebe5; --user-text: #17181c; --note: #1f2026;
+      --correct: #ff9a7a; --correct-soft: #3a211b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101114; --surface: #17181c; --text: #ecebe5; --muted: #a2a19a; --border: #2c2d33;
+    --accent: #8fb3ff; --accent-soft: #1d2740; --user: #ecebe5; --user-text: #17181c; --note: #1f2026;
+    --correct: #ff9a7a; --correct-soft: #3a211b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .page { max-width: 980px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.intro { max-width: 720px; margin-bottom: 36px; }
+  .eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  h1 { font-size: 32px; line-height: 1.2; margin: 6px 0 12px; letter-spacing: -.01em; }
+  .lede { color: var(--muted); margin: 0; }
+
+  /* Phase navigation */
+  nav.phases { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--border);
+    display: flex; gap: 6px; overflow-x: auto; padding: 10px 0; margin-bottom: 32px; }
+  nav.phases a { flex: none; font-size: 13px; text-decoration: none; color: var(--muted); padding: 4px 12px;
+    border-radius: 999px; border: 1px solid var(--border); background: var(--surface); }
+  nav.phases a:hover { color: var(--text); border-color: var(--accent); }
+
+  section.phase { margin: 0 0 48px; scroll-margin-top: 64px; }
+  .marker { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--accent);
+    background: var(--accent-soft); padding: 3px 10px; border-radius: 999px; }
+  h2 { font-size: 22px; margin: 10px 0 14px; }
+  .narrow { max-width: 720px; }
+  p { margin: 0 0 14px; }
+
+  /* Chat */
+  .chat { display: flex; flex-direction: column; gap: 10px; margin: 18px 0; }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; }
+  .msg .who { display: block; font-size: 12px; font-weight: 600; opacity: .7; margin-bottom: 2px; }
+  .msg.sam { align-self: flex-end; background: var(--user); color: var(--user-text); border-bottom-right-radius: 4px; }
+  .msg.skill { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+  .msg.skill.correction { border-color: var(--correct); background: var(--correct-soft); }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    padding: 1px 8px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  .tag.fact { color: var(--correct); border: 1px solid var(--correct); }
+  .tag.question { color: var(--accent); border: 1px solid var(--accent); }
+
+  .note { background: var(--note); border-radius: 12px; padding: 12px 16px; margin: 16px 0; font-size: 15px; }
+  .exit { border-left: 3px solid var(--accent); padding: 8px 0 8px 14px; margin: 18px 0 0; }
+  .exit strong { display: block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+  .quote { font-style: italic; }
+
+  /* Embedded mind map */
+  .map-frame { margin: 22px 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+    box-shadow: 0 12px 40px rgba(10, 15, 40, .18); background: #0b1020; }
+  .map-frame iframe { display: block; width: 100%; height: 680px; border: 0; }
+  .caption { font-size: 13px; color: var(--muted); margin-top: -10px; }
+
+  ul.plain { margin: 0 0 14px; padding-left: 20px; }
+  ul.plain li { margin-bottom: 6px; }
+
+  @media (max-width: 760px) {
+    .page { padding: 28px 16px 60px; }
+    h1 { font-size: 26px; }
+    .msg { max-width: 92%; }
+    .map-frame iframe { height: 1100px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="intro">
+    <p class="eyebrow">Research Smarter · Example walkthrough</p>
+    <h1>Sam researches social media and teen mental health</h1>
+    <p class="lede">One student, followed through every phase. Exchanges are shortened to show how the skill behaves. Sources are placeholders, not real citations.</p>
+  </header>
+
+  <nav class="phases" aria-label="Phases">
+    <a href="#start">Start</a>
+    <a href="#p0">0 · Intake</a>
+    <a href="#p1">1 · Explore</a>
+    <a href="#p2">2 · Stress test</a>
+    <a href="#p3">3 · Plan</a>
+    <a href="#p4">4 · Research</a>
+    <a href="#p5">5 · Ongoing (optional)</a>
+  </nav>
+
+  <section class="phase narrow" id="start">
+    <span class="marker">Starting the skill</span>
+    <h2>Activation</h2>
+    <div class="chat">
+      <div class="msg sam"><span class="who">Sam</span>I need to research social media and teen mental health for my sociology class.</div>
+    </div>
+    <p>The keyword "research" and a research project activate the skill. It opens with a short reminder that AI can make mistakes and that Sam should fact-check what it produces.</p>
+  </section>
+
+  <section class="phase narrow" id="p0">
+    <span class="marker">Phase 0 · Intake</span>
+    <h2>Gathering context</h2>
+    <p>The skill asks a few questions, one or two at a time. Sam explains:</p>
+    <ul class="plain">
+      <li>An 8-page argumentative essay for a sociology class</li>
+      <li>Due in four weeks</li>
+      <li>At least five peer-reviewed sources, APA style</li>
+      <li>Sam has read a few news articles, but nothing academic</li>
+    </ul>
+    <div class="exit"><strong>Exit check</strong>The skill has the context it needs. The research type is set to argumentative essay, so the working position will be a thesis. Because it's an 8-page paper requiring peer-reviewed sources, the skill sets a fairly demanding challenge level, without ever asking Sam's age or school.</div>
+  </section>
+
+  <section class="phase" id="p1">
+    <div class="narrow">
+      <span class="marker">Phase 1 of 5 · Explore and choose a direction</span>
+      <h2>Briefing and mind map</h2>
+      <p>The skill gives a short briefing: this is a heavily studied topic, most research asks whether social media harms teens, and the public debate is heated. It points out patterns, such as many studies relying on teens' estimates of their own screen time.</p>
+      <p>Then it opens the interactive mind map. Sam rotates it and clicks through the branches. The main "does social media cause depression?" branch is red, meaning crowded. "School phone bans" is less explored, and its narrower branches are cooler still.</p>
+    </div>
+
+    <div class="map-frame">
+      <iframe srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Research Mind Map&lt;/title&gt;
+&lt;style&gt;
+  :root {
+    --bg: #f6f5f1;
+    --surface: #ffffff;
+    --text: #1d1d1b;
+    --muted: #6b6a64;
+    --border: #e2e0d8;
+    --accent: #2f6fdf;
+    --soft: #f1f0eb;
+    /* The 3D stage is always a night-sky scene, in both themes. */
+    --space-1: #0b1020;
+    --space-2: #050710;
+    --space-text: #eef1ff;
+    --space-muted: #9aa3c7;
+    --space-line: rgba(160, 175, 230, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme=&quot;light&quot;]) {
+      --bg: #101114;
+      --surface: #17181c;
+      --text: #ecebe5;
+      --muted: #a2a19a;
+      --border: #2c2d33;
+      --accent: #8fb3ff;
+      --soft: #1f2026;
+    }
+  }
+  :root[data-theme=&quot;dark&quot;] {
+    --bg: #101114;
+    --surface: #17181c;
+    --text: #ecebe5;
+    --muted: #a2a19a;
+    --border: #2c2d33;
+    --accent: #8fb3ff;
+    --soft: #1f2026;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;
+  }
+  .app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: 100vh; }
+
+  /* Stage: header row, map row, footer row, so nothing overlaps the map. */
+  .stage {
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 0; color: var(--space-text);
+    background: radial-gradient(ellipse at 50% 45%, #172046 0%, var(--space-1) 45%, var(--space-2) 100%);
+  }
+  .stage-header { padding: 18px 22px 10px; border-bottom: 1px solid var(--space-line); }
+  .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--space-muted); margin: 0; }
+  .stage-header h1 { font-size: 22px; margin: 2px 0 0; font-weight: 650; letter-spacing: -.01em; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin-top: 6px; color: var(--space-muted); font-size: 13px; }
+  .demo { font-size: 11px; padding: 1px 8px; border: 1px dashed rgba(154, 163, 199, .5); border-radius: 999px; }
+  .canvas-wrap { position: relative; min-height: 0; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+  canvas.dragging { cursor: grabbing; }
+  canvas.over-node { cursor: pointer; }
+  .stage-footer {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 10px 22px 14px; border-top: 1px solid var(--space-line); font-size: 12px; color: var(--space-muted);
+  }
+  .legend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .legend-bar { width: 140px; height: 6px; border-radius: 3px;
+    background: linear-gradient(90deg, hsl(200 95% 62%), hsl(150 80% 55%), hsl(48 95% 58%), hsl(10 95% 60%)); }
+  .reset { font: inherit; font-size: 12px; padding: 5px 12px; border-radius: 999px; cursor: pointer;
+    border: 1px solid rgba(154, 163, 199, .4); background: rgba(255, 255, 255, .06); color: var(--space-text); }
+  .reset:hover { background: rgba(255, 255, 255, .12); }
+
+  /* Side panel */
+  .panel { background: var(--surface); border-left: 1px solid var(--border); padding: 24px 22px; overflow-y: auto; }
+  .panel h2 { font-size: 19px; margin: 4px 0 8px; line-height: 1.3; }
+  .panel h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 20px 0 6px; }
+  .panel p { margin: 0 0 10px; }
+  .panel ul { margin: 0; padding-left: 18px; }
+  .panel li { margin: 0 0 6px; }
+  .crumb { font-size: 13px; color: var(--muted); }
+  .crumb button { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--border); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .branch-list { list-style: none; padding: 0 !important; }
+  .branch-list button { width: 100%; text-align: left; font: inherit; color: var(--text); background: none;
+    border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; cursor: pointer; display: flex; gap: 10px; align-items: center; }
+  .branch-list button:hover, .branch-list button:focus-visible { border-color: var(--accent); outline: none; }
+  .next { margin-top: 22px; padding: 12px 14px; border-radius: 10px; background: var(--soft); font-size: 14px; }
+
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; grid-template-rows: max(560px, 82vh) auto; height: auto; }
+    .stage-header { padding: 14px 16px 8px; }
+    .stage-header h1 { font-size: 19px; }
+    .stage-footer { padding: 8px 16px 12px; }
+    .panel { border-left: 0; border-top: 1px solid var(--border); padding: 20px 16px; }
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;app&quot;&gt;
+  &lt;div class=&quot;stage&quot;&gt;
+    &lt;div class=&quot;stage-header&quot;&gt;
+      &lt;p class=&quot;eyebrow&quot;&gt;Phase 1 of 5 · Explore and choose a direction&lt;/p&gt;
+      &lt;h1 id=&quot;topic&quot;&gt;&lt;/h1&gt;
+      &lt;div class=&quot;meta&quot;&gt;
+        &lt;span&gt;Drag to rotate · Scroll or pinch to zoom · Click a branch&lt;/span&gt;
+        &lt;span class=&quot;demo&quot;&gt;Demo data · sources are placeholders&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;canvas-wrap&quot;&gt;
+      &lt;canvas id=&quot;map&quot; aria-label=&quot;Interactive 3D mind map of research angles&quot;&gt;&lt;/canvas&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;stage-footer&quot;&gt;
+      &lt;div class=&quot;legend&quot;&gt;
+        &lt;span&gt;Under-explored&lt;/span&gt;&lt;div class=&quot;legend-bar&quot;&gt;&lt;/div&gt;&lt;span&gt;Crowded&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;button class=&quot;reset&quot; id=&quot;reset&quot; type=&quot;button&quot;&gt;Reset view&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;aside class=&quot;panel&quot; id=&quot;panel&quot; aria-live=&quot;polite&quot;&gt;&lt;/aside&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+// ---------------------------------------------------------------------------
+// DATA: this is the only part the skill fills in for each topic.
+// saturation: 0 = under-explored, 1 = crowded.
+// ---------------------------------------------------------------------------
+const DATA = {
+  topic: &quot;Social media and teen mental health&quot;,
+  overview: &quot;A heavily studied topic with an active public debate. Most research focuses on whether social media use harms teens, but several narrower angles are much less explored.&quot;,
+  branches: [
+    {
+      label: &quot;Does social media cause teen depression?&quot;,
+      saturation: 0.95,
+      description: &quot;The central debate: whether rising social media use explains rising rates of teen anxiety and depression.&quot;,
+      sources: [&quot;Large survey studies linking time on social media to wellbeing&quot;, &quot;Critiques arguing the measured effects are small&quot;],
+      questions: [&quot;What would it take to show causation rather than correlation?&quot;, &quot;Why might this debate still be unsettled after so much research?&quot;, &quot;What could you add that hundreds of studies haven&#x27;t?&quot;],
+      children: [
+        { label: &quot;Correlation vs. causation&quot;, saturation: 0.85,
+          description: &quot;Whether the links found in studies reflect cause and effect, or something else driving both.&quot;,
+          questions: [&quot;What else changed in teens&#x27; lives over the same period?&quot;, &quot;What kind of study design could separate cause from correlation?&quot;] },
+        { label: &quot;How big is the effect?&quot;, saturation: 0.7,
+          description: &quot;Disputes over whether the measured effects are large enough to matter.&quot;,
+          questions: [&quot;How would you decide what size of effect matters?&quot;, &quot;Could a small average effect hide large effects for some teens?&quot;] }
+      ]
+    },
+    {
+      label: &quot;Platform design features&quot;,
+      saturation: 0.6,
+      description: &quot;How specific features, such as infinite scroll, like counts, and algorithmic feeds, shape how teens use platforms.&quot;,
+      sources: [&quot;Studies of individual features rather than overall use&quot;, &quot;Reports on platform design choices&quot;],
+      questions: [&quot;Is the problem social media itself, or particular ways it&#x27;s built?&quot;, &quot;Who has the data needed to study individual features?&quot;],
+      children: [
+        { label: &quot;Algorithmic feeds&quot;, saturation: 0.55,
+          description: &quot;How recommendation systems decide what teens see.&quot;,
+          questions: [&quot;How could researchers study a feed they can&#x27;t see inside?&quot;, &quot;What&#x27;s the difference between what teens choose and what they&#x27;re shown?&quot;] },
+        { label: &quot;Likes and social comparison&quot;, saturation: 0.65,
+          description: &quot;Visible approval metrics and how teens compare themselves to others.&quot;,
+          questions: [&quot;Is comparison new, or just faster and more visible?&quot;, &quot;What happened when platforms experimented with hiding like counts?&quot;] },
+        { label: &quot;Notifications and attention&quot;, saturation: 0.45,
+          description: &quot;How alerts pull teens back to their phones.&quot;,
+          questions: [&quot;How would you separate the effect of notifications from the content they lead to?&quot;] }
+      ]
+    },
+    {
+      label: &quot;School phone bans&quot;,
+      saturation: 0.4,
+      description: &quot;Schools and governments restricting phones during the school day, and what changes as a result.&quot;,
+      sources: [&quot;Early evaluations of school phone policies&quot;, &quot;News coverage of new bans and how they&#x27;re enforced&quot;],
+      questions: [&quot;What outcome would you measure to judge whether a ban works?&quot;, &quot;Why might results differ between schools?&quot;, &quot;Who decides what counts as success?&quot;],
+      children: [
+        { label: &quot;Attention and learning&quot;, saturation: 0.35,
+          description: &quot;Whether bans change focus in class or academic results.&quot;,
+          questions: [&quot;What else might change in a school at the same time a ban starts?&quot;] },
+        { label: &quot;Bullying and social life&quot;, saturation: 0.3,
+          description: &quot;Whether bans change how students interact in person and online.&quot;,
+          questions: [&quot;Does a ban change behavior, or just move it to after school?&quot;, &quot;How would you observe social interaction fairly?&quot;] },
+        { label: &quot;How bans are enforced&quot;, saturation: 0.2,
+          description: &quot;Pouches, lockers, confiscation, and how strictly rules are applied.&quot;,
+          questions: [&quot;Could two schools with the same rule have very different bans in practice?&quot;] }
+      ]
+    },
+    {
+      label: &quot;Online community for isolated teens&quot;,
+      saturation: 0.25,
+      description: &quot;Whether social media provides support for teens who lack it offline.&quot;,
+      sources: [&quot;Qualitative studies of online support communities&quot;, &quot;Surveys of specific groups of teens&quot;],
+      questions: [&quot;Which teens might benefit, and which might be harmed?&quot;, &quot;How would broad restrictions affect these groups?&quot;],
+      children: [
+        { label: &quot;LGBTQ+ youth&quot;, saturation: 0.35,
+          description: &quot;Online spaces as a source of identity, information, and connection.&quot;,
+          questions: [&quot;How do the benefits and the risks of these spaces compare?&quot;] },
+        { label: &quot;Teens with chronic illness&quot;, saturation: 0.15,
+          description: &quot;Connecting with others who share the same condition.&quot;,
+          questions: [&quot;How would you find and ethically study this group?&quot;] }
+      ]
+    },
+    {
+      label: &quot;How screen time is measured&quot;,
+      saturation: 0.45,
+      description: &quot;Problems with how researchers measure social media use in the first place.&quot;,
+      sources: [&quot;Studies comparing self-reported and tracked phone use&quot;, &quot;Methods critiques of the broader literature&quot;],
+      questions: [&quot;If the measurements are shaky, what does that mean for the conclusions built on them?&quot;, &quot;What should be measured instead of hours?&quot;],
+      children: [
+        { label: &quot;Self-report vs. tracked data&quot;, saturation: 0.5,
+          description: &quot;How well teens&#x27; estimates of their own use match what their phones record.&quot;,
+          questions: [&quot;Why might teens over- or under-estimate their use?&quot;] },
+        { label: &quot;Type of use, not amount&quot;, saturation: 0.4,
+          description: &quot;Messaging friends, scrolling, and creating content may affect teens differently.&quot;,
+          questions: [&quot;How would you categorize types of use in a way others could repeat?&quot;] }
+      ]
+    }
+  ]
+};
+
+// ---------------------------------------------------------------------------
+// Rendering and interaction (the template; stays the same for every topic).
+// ---------------------------------------------------------------------------
+const canvas = document.getElementById(&quot;map&quot;);
+const ctx = canvas.getContext(&quot;2d&quot;);
+const panel = document.getElementById(&quot;panel&quot;);
+document.getElementById(&quot;topic&quot;).textContent = DATA.topic;
+
+const nodes = [];
+const root = { id: 0, label: DATA.topic, level: 0, pos: [0, 0, 0], parent: null, children: [], data: DATA };
+nodes.push(root);
+
+// Layout sizes in &quot;world&quot; units. EXTENT is the furthest a node can sit from
+// the center, used to scale the map to fill the available space.
+const R1 = 250, R2 = 105, SPREAD = 80;
+const EXTENT = R1 + R2 + SPREAD * 0.6;
+const n = DATA.branches.length;
+DATA.branches.forEach((b, i) =&gt; {
+  // Even spread of first-level branches around a sphere (Fibonacci sphere).
+  const y = n === 1 ? 0 : 0.7 - (i / (n - 1)) * 1.4;
+  const r = Math.sqrt(1 - y * y);
+  const theta = i * Math.PI * (3 - Math.sqrt(5));
+  const dir = [Math.cos(theta) * r, y, Math.sin(theta) * r];
+  const node = { id: nodes.length, label: b.label, level: 1, pos: dir.map(v =&gt; v * R1), parent: root, children: [], data: b };
+  nodes.push(node); root.children.push(node);
+  const kids = b.children || [];
+  let u = norm(cross(dir, Math.abs(dir[1]) &lt; 0.9 ? [0, 1, 0] : [1, 0, 0]));
+  const v = norm(cross(dir, u));
+  kids.forEach((c, j) =&gt; {
+    const a = (j / kids.length) * Math.PI * 2 + i;
+    const p = [0, 1, 2].map(k =&gt; node.pos[k] + dir[k] * R2 + (u[k] * Math.cos(a) + v[k] * Math.sin(a)) * SPREAD);
+    const child = { id: nodes.length, label: c.label, level: 2, pos: p, parent: node, children: [], data: c };
+    nodes.push(child); node.children.push(child);
+  });
+});
+
+function cross(a, b) { return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
+function norm(a) { const l = Math.hypot(...a) || 1; return a.map(x =&gt; x / l); }
+
+// 0 -&gt; cool cyan-blue, 1 -&gt; hot red-orange
+function satHue(s) { return 200 - s * 190; }
+function satColor(s, alpha = 1, light = 60) { return `hsla(${satHue(s)}, 95%, ${light}%, ${alpha})`; }
+function satLabel(s) { return s &gt;= 0.7 ? &quot;Crowded&quot; : s &gt;= 0.4 ? &quot;Moderately explored&quot; : &quot;Under-explored&quot;; }
+
+// Background stars: fixed points on a large sphere that drift with rotation.
+const stars = Array.from({ length: 260 }, () =&gt; {
+  const z = Math.random() * 2 - 1, t = Math.random() * Math.PI * 2, r = Math.sqrt(1 - z * z);
+  return { d: [r * Math.cos(t), z, r * Math.sin(t)], size: Math.random() * 1.3 + 0.3, tw: Math.random() * Math.PI * 2 };
+});
+
+let yaw = 0.6, pitch = -0.22, zoom = 1;
+let targetYaw = null, targetPitch = null, targetZoom = null;
+let autoRotate = true;
+let selected = null, hovered = null;
+let W = 0, H = 0, DPR = 1, time = 0;
+let projected = [];
+
+function resize() {
+  const rect = canvas.getBoundingClientRect();
+  DPR = window.devicePixelRatio || 1;
+  W = rect.width; H = rect.height;
+  canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+
+function rotate(p) {
+  const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const x1 = p[0] * cy + p[2] * sy;
+  const z1 = -p[0] * sy + p[2] * cy;
+  return [x1, p[1] * cp - z1 * sp, p[1] * sp + z1 * cp];
+}
+
+const CAM = 900;
+function project(p) {
+  const [x, y, z] = rotate(p);
+  // Scale so the whole map fills most of the space, leaving room for labels.
+  const fit = (Math.min(W, H) * 0.5) / EXTENT;
+  const s = (CAM / (CAM + z)) * zoom * fit;
+  return { x: W / 2 + x * s, y: H / 2 + y * s, z, s };
+}
+
+function radius(node) { return node.level === 0 ? 22 : node.level === 1 ? 14 : 8; }
+
+function drawStars() {
+  for (const st of stars) {
+    const [x, y, z] = rotate(st.d);
+    if (z &gt; 0.2) continue; // only the half of the sky behind the map
+    const sx = W / 2 + x * Math.max(W, H) * 0.75, sy = H / 2 + y * Math.max(W, H) * 0.75;
+    const a = 0.25 + 0.35 * (0.5 + 0.5 * Math.sin(time * 0.002 + st.tw));
+    ctx.fillStyle = `rgba(220, 228, 255, ${a})`;
+    ctx.beginPath(); ctx.arc(sx, sy, st.size, 0, Math.PI * 2); ctx.fill();
+  }
+}
+
+function nodeHue(nd) { return nd.level === 0 ? null : satHue(nd.data.saturation); }
+
+function drawNode(p, depth) {
+  const nd = p.nd, r = radius(nd) * p.s;
+  const isFocus = nd === selected || nd === hovered;
+  const dim = selected &amp;&amp; !isFocus &amp;&amp; nd !== selected?.parent &amp;&amp; nd.parent !== selected &amp;&amp; nd.level !== 0 ? 0.45 : 1;
+  const a = depth * dim;
+  const hue = nodeHue(nd);
+
+  // Outer glow
+  const glowR = r * (isFocus ? 3.6 : 2.6);
+  const g = ctx.createRadialGradient(p.x, p.y, r * 0.4, p.x, p.y, glowR);
+  const glowColor = hue === null ? &quot;rgba(190, 205, 255,&quot; : `hsla(${hue}, 100%, 60%,`;
+  g.addColorStop(0, `${glowColor} ${0.45 * a})`);
+  g.addColorStop(1, `${glowColor} 0)`);
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2); ctx.fill();
+
+  // Sphere body with a highlight, so nodes read as 3D orbs
+  const body = ctx.createRadialGradient(p.x - r * 0.35, p.y - r * 0.4, r * 0.1, p.x, p.y, r);
+  if (hue === null) {
+    body.addColorStop(0, `rgba(255, 255, 255, ${a})`);
+    body.addColorStop(1, `rgba(150, 165, 230, ${a})`);
+  } else {
+    body.addColorStop(0, `hsla(${hue}, 100%, 85%, ${a})`);
+    body.addColorStop(0.55, `hsla(${hue}, 95%, 58%, ${a})`);
+    body.addColorStop(1, `hsla(${hue}, 90%, 38%, ${a})`);
+  }
+  ctx.fillStyle = body;
+  ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
+
+  if (nd === selected) {
+    const pulse = 1 + 0.12 * Math.sin(time * 0.005);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = `rgba(255, 255, 255, 0.85)`;
+    ctx.beginPath(); ctx.arc(p.x, p.y, (r + 7) * pulse, 0, Math.PI * 2); ctx.stroke();
+  } else if (nd === hovered) {
+    ctx.lineWidth = 1.5; ctx.strokeStyle = &quot;rgba(255, 255, 255, 0.6)&quot;;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r + 5, 0, Math.PI * 2); ctx.stroke();
+  }
+}
+
+function drawLabel(p, depth) {
+  const nd = p.nd;
+  const show = nd.level &lt; 2 || nd === hovered || nd === selected || (selected &amp;&amp; (nd.parent === selected || nd.parent === selected.parent));
+  if (!show) return;
+  const size = (nd.level === 0 ? 15 : nd.level === 1 ? 13 : 12) * Math.max(0.85, Math.min(1.25, p.s));
+  ctx.font = `${nd.level === 0 ? 650 : 550} ${size}px system-ui, -apple-system, sans-serif`;
+  const lines = wrap(nd.label, nd.level === 0 ? 190 : 160);
+  const lh = size * 1.25;
+  const w = Math.max(...lines.map(l =&gt; ctx.measureText(l).width)) + 16;
+  const h = lines.length * lh + 8;
+  const r = radius(nd) * p.s;
+  const x = p.x - w / 2, y = p.y + r + 8;
+  const focus = nd === selected || nd === hovered;
+  const a = focus ? 1 : Math.max(0.35, depth);
+  // Label pill so text stays readable over lines and other nodes
+  ctx.fillStyle = `rgba(8, 11, 24, ${0.72 * a})`;
+  ctx.strokeStyle = focus ? &quot;rgba(255, 255, 255, 0.5)&quot; : `rgba(160, 175, 230, ${0.22 * a})`;
+  ctx.lineWidth = 1;
+  roundRect(x, y, w, h, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = `rgba(238, 241, 255, ${a})`;
+  ctx.textAlign = &quot;center&quot;; ctx.textBaseline = &quot;top&quot;;
+  lines.forEach((l, i) =&gt; ctx.fillText(l, p.x, y + 4 + i * lh + (lh - size) / 2));
+}
+
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+
+function wrap(text, maxW) {
+  const words = text.split(&quot; &quot;); let line = &quot;&quot;, lines = [];
+  for (const w of words) {
+    const test = line ? line + &quot; &quot; + w : w;
+    if (ctx.measureText(test).width &gt; maxW &amp;&amp; line) { lines.push(line); line = w; } else line = test;
+  }
+  lines.push(line);
+  return lines;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  drawStars();
+  projected = nodes.map(nd =&gt; ({ nd, ...project(nd.pos) }));
+  const depth = z =&gt; Math.max(0.3, Math.min(1, 0.7 - z / 800));
+
+  // Edges: glowing gradient from parent color to child color, curved slightly
+  ctx.lineCap = &quot;round&quot;;
+  for (const p of projected) {
+    if (!p.nd.parent) continue;
+    const q = projected[p.nd.parent.id];
+    const active = selected &amp;&amp; (selected === p.nd || selected === p.nd.parent);
+    const a = depth((p.z + q.z) / 2) * (selected &amp;&amp; !active ? 0.5 : 1);
+    const ph = nodeHue(p.nd.parent), ch = nodeHue(p.nd);
+    const grad = ctx.createLinearGradient(q.x, q.y, p.x, p.y);
+    grad.addColorStop(0, ph === null ? `rgba(190, 205, 255, ${0.55 * a})` : `hsla(${ph}, 100%, 65%, ${0.55 * a})`);
+    grad.addColorStop(1, `hsla(${ch}, 100%, 65%, ${0.75 * a})`);
+    const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
+    const cx = mx + (q.y - p.y) * 0.08, cy = my - (q.x - p.x) * 0.08;
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = (p.nd.level === 1 ? 2.4 : 1.4) * Math.min(p.s, q.s) * (active ? 1.6 : 1);
+    ctx.shadowColor = `hsla(${ch}, 100%, 60%, ${0.6 * a})`;
+    ctx.shadowBlur = active ? 14 : 6;
+    ctx.beginPath(); ctx.moveTo(q.x, q.y); ctx.quadraticCurveTo(cx, cy, p.x, p.y); ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+
+  // Nodes far to near, then labels far to near so labels sit on top
+  const order = [...projected].sort((a, b) =&gt; b.z - a.z);
+  for (const p of order) drawNode(p, depth(p.z));
+  for (const p of order) drawLabel(p, depth(p.z));
+}
+
+function angleDiff(a, b) { let d = b - a; while (d &gt; Math.PI) d -= 2 * Math.PI; while (d &lt; -Math.PI) d += 2 * Math.PI; return d; }
+
+function tick(t) {
+  time = t;
+  if (targetYaw !== null) {
+    const dy = angleDiff(yaw, targetYaw), dp = targetPitch - pitch;
+    yaw += dy * 0.1; pitch += dp * 0.1;
+    if (Math.abs(dy) &lt; 0.002 &amp;&amp; Math.abs(dp) &lt; 0.002) targetYaw = targetPitch = null;
+  } else if (autoRotate) {
+    yaw += 0.002;
+  }
+  if (targetZoom !== null) {
+    zoom += (targetZoom - zoom) * 0.1;
+    if (Math.abs(targetZoom - zoom) &lt; 0.002) targetZoom = null;
+  }
+  draw();
+  requestAnimationFrame(tick);
+}
+
+function focusOn(nd) {
+  const [x, y, z] = nd.pos;
+  if (nd.level === 0) { targetYaw = yaw; targetPitch = -0.22; return; }
+  targetYaw = Math.atan2(x, -z);
+  targetPitch = Math.atan2(-y, Math.hypot(x, z));
+}
+
+function select(nd) {
+  selected = nd.level === 0 ? null : nd; autoRotate = false;
+  focusOn(nd);
+  renderPanel();
+}
+
+// --- Panel -----------------------------------------------------------------
+function esc(s) { return String(s).replace(/[&amp;&lt;&gt;&quot;]/g, c =&gt; ({ &quot;&amp;&quot;: &quot;&amp;amp;&quot;, &quot;&lt;&quot;: &quot;&amp;lt;&quot;, &quot;&gt;&quot;: &quot;&amp;gt;&quot;, &#x27;&quot;&#x27;: &quot;&amp;quot;&quot; }[c])); }
+
+function branchButtons(list) {
+  return `&lt;ul class=&quot;branch-list&quot;&gt;${list.map(c =&gt;
+    `&lt;li&gt;&lt;button type=&quot;button&quot; data-id=&quot;${c.id}&quot;&gt;&lt;span class=&quot;dot&quot; style=&quot;background:${satColor(c.data.saturation, 1, 52)}&quot;&gt;&lt;/span&gt;${esc(c.label)}&lt;/button&gt;&lt;/li&gt;`
+  ).join(&quot;&quot;)}&lt;/ul&gt;`;
+}
+
+function renderPanel() {
+  const nd = selected;
+  let html = &quot;&quot;;
+  if (!nd) {
+    html = `
+      &lt;p class=&quot;crumb&quot;&gt;Your topic&lt;/p&gt;
+      &lt;h2&gt;${esc(DATA.topic)}&lt;/h2&gt;
+      &lt;p&gt;${esc(DATA.overview)}&lt;/p&gt;
+      &lt;h3&gt;Possible angles&lt;/h3&gt;
+      ${branchButtons(root.children)}
+      &lt;div class=&quot;next&quot;&gt;Explore the branches, then tell me in the chat which direction you want to take, and why.&lt;/div&gt;`;
+  } else {
+    const d = nd.data;
+    const crumbs = nd.level === 2
+      ? `&lt;button type=&quot;button&quot; data-id=&quot;0&quot;&gt;Topic&lt;/button&gt; › &lt;button type=&quot;button&quot; data-id=&quot;${nd.parent.id}&quot;&gt;${esc(nd.parent.label)}&lt;/button&gt;`
+      : `&lt;button type=&quot;button&quot; data-id=&quot;0&quot;&gt;Topic&lt;/button&gt;`;
+    html = `
+      &lt;p class=&quot;crumb&quot;&gt;${crumbs}&lt;/p&gt;
+      &lt;h2&gt;${esc(nd.label)}&lt;/h2&gt;
+      &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot&quot; style=&quot;background:${satColor(d.saturation, 1, 52)}&quot;&gt;&lt;/span&gt;${satLabel(d.saturation)}&lt;/span&gt;
+      &lt;h3&gt;About this angle&lt;/h3&gt;
+      &lt;p&gt;${esc(d.description)}&lt;/p&gt;
+      ${d.sources &amp;&amp; d.sources.length ? `&lt;h3&gt;Key sources&lt;/h3&gt;&lt;ul&gt;${d.sources.map(s =&gt; `&lt;li&gt;${esc(s)}&lt;/li&gt;`).join(&quot;&quot;)}&lt;/ul&gt;` : &quot;&quot;}
+      ${d.questions &amp;&amp; d.questions.length ? `&lt;h3&gt;Questions to consider&lt;/h3&gt;&lt;ul&gt;${d.questions.map(q =&gt; `&lt;li&gt;${esc(q)}&lt;/li&gt;`).join(&quot;&quot;)}&lt;/ul&gt;` : &quot;&quot;}
+      ${nd.children.length ? `&lt;h3&gt;Narrower angles&lt;/h3&gt;${branchButtons(nd.children)}` : &quot;&quot;}
+      &lt;div class=&quot;next&quot;&gt;If this is the direction you want, tell me in the chat, and explain why you chose it.&lt;/div&gt;`;
+  }
+  panel.innerHTML = html;
+}
+
+panel.addEventListener(&quot;click&quot;, e =&gt; {
+  const b = e.target.closest(&quot;button[data-id]&quot;);
+  if (b) select(nodes[+b.dataset.id]);
+});
+
+// --- Pointer input -----------------------------------------------------------
+const pointers = new Map();
+let moved = 0, pinchDist = null;
+
+function hit(x, y) {
+  let best = null, bestZ = Infinity;
+  for (const p of projected) {
+    const r = radius(p.nd) * p.s + 8;
+    if (Math.hypot(p.x - x, p.y - y) &lt;= r &amp;&amp; p.z &lt; bestZ) { best = p.nd; bestZ = p.z; }
+  }
+  return best;
+}
+function localXY(e) { const r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+
+canvas.addEventListener(&quot;pointerdown&quot;, e =&gt; {
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, localXY(e));
+  if (pointers.size === 1) moved = 0;
+  autoRotate = false; targetYaw = targetPitch = targetZoom = null;
+  canvas.classList.add(&quot;dragging&quot;);
+});
+canvas.addEventListener(&quot;pointermove&quot;, e =&gt; {
+  const [x, y] = localXY(e);
+  if (!pointers.has(e.pointerId)) {
+    hovered = hit(x, y);
+    canvas.classList.toggle(&quot;over-node&quot;, !!hovered);
+    return;
+  }
+  const [px, py] = pointers.get(e.pointerId);
+  pointers.set(e.pointerId, [x, y]);
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+    if (pinchDist) zoom = Math.max(0.6, Math.min(2.4, zoom * d / pinchDist));
+    pinchDist = d; moved += 10;
+    return;
+  }
+  yaw += (x - px) * 0.008;
+  pitch = Math.max(-1.4, Math.min(1.4, pitch + (y - py) * 0.008));
+  moved += Math.abs(x - px) + Math.abs(y - py);
+});
+function endPointer(e) {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.delete(e.pointerId);
+  if (pointers.size &lt; 2) pinchDist = null;
+  if (pointers.size === 0) {
+    canvas.classList.remove(&quot;dragging&quot;);
+    if (moved &lt; 6) { const nd = hit(...localXY(e)); if (nd) select(nd); }
+  }
+}
+canvas.addEventListener(&quot;pointerup&quot;, endPointer);
+canvas.addEventListener(&quot;pointercancel&quot;, endPointer);
+canvas.addEventListener(&quot;pointerleave&quot;, () =&gt; { hovered = null; });
+canvas.addEventListener(&quot;wheel&quot;, e =&gt; {
+  e.preventDefault();
+  targetZoom = null;
+  zoom = Math.max(0.6, Math.min(2.4, zoom * Math.exp(-e.deltaY * 0.0015)));
+}, { passive: false });
+
+document.getElementById(&quot;reset&quot;).addEventListener(&quot;click&quot;, () =&gt; {
+  selected = null; targetZoom = 1; targetYaw = 0.6; targetPitch = -0.22; renderPanel();
+});
+
+new ResizeObserver(resize).observe(canvas);
+resize();
+renderPanel();
+requestAnimationFrame(tick);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+" title="Interactive mind map of research angles"></iframe>
+    </div>
+    <p class="caption narrow">Try it: drag to rotate, scroll to zoom, and click "School phone bans" to see what Sam saw.</p>
+
+    <div class="narrow">
+      <div class="chat">
+        <div class="msg sam"><span class="who">Sam</span>I want to do school phone bans. My school just started one.</div>
+        <div class="msg skill"><span class="who">Skill</span>What makes that more than a personal connection? Why might phone bans be worth researching right now?</div>
+        <div class="msg sam"><span class="who">Sam</span>Because lots of schools are trying them, but there isn't much research yet on whether they work.</div>
+      </div>
+      <p>The skill flags that "Do phone bans work?" is too broad to answer in 8 pages, and asks what "work" would mean. Sam settles on social life rather than grades, because that branch was less explored.</p>
+      <div class="exit"><strong>Exit check</strong>Sam states the draft question in one sentence, in their own words: <span class="quote">"How have school-day phone bans changed how high school students interact with each other in person?"</span></div>
+    </div>
+  </section>
+
+  <section class="phase narrow" id="p2">
+    <span class="marker">Phase 2 of 5 · Pre-research stress test</span>
+    <h2>Facts corrected, reasoning questioned</h2>
+    <p>The skill researches phone bans and social life more deeply and gives a second briefing. Sam starts forming a position.</p>
+    <div class="chat">
+      <div class="msg sam"><span class="who">Sam</span>Phone bans started after COVID, when everyone realized how addicted kids were.</div>
+      <div class="msg skill correction"><span class="who">Skill <span class="tag fact">Factual correction</span></span>That part isn't accurate. France passed a law restricting phones in primary and middle schools in 2018, before the pandemic. How might a longer history of bans be useful to your project?</div>
+    </div>
+    <p>That's a factual error, so the skill corrects it directly. When Sam makes a conceptual claim, the skill asks questions instead:</p>
+    <div class="chat">
+      <div class="msg sam"><span class="who">Sam</span>Bans obviously improve social life. At my school, people talk at lunch now.</div>
+      <div class="msg skill"><span class="who">Skill <span class="tag question">Probing question</span></span>What else might have changed at your school at the same time? And how would you know whether what you're seeing at one school is true at others?</div>
+    </div>
+    <p>Later, Sam points out that some studies look at the same schools before and after a ban. The skill acknowledges that this is a strong point and explains why, then moves on to a weaker one: whether "talking more at lunch" is the same thing as better social life.</p>
+    <div class="exit"><strong>Exit check</strong>Sam writes a working thesis and names the strongest counterargument: bans may just move social conflict to after school instead of reducing it.</div>
+  </section>
+
+  <section class="phase narrow" id="p3">
+    <span class="marker">Phase 3 of 5 · Plan the research</span>
+    <h2>Holding the line, kindly</h2>
+    <div class="chat">
+      <div class="msg sam"><span class="who">Sam</span>Can you just write my sub-questions? I'm short on time.</div>
+      <div class="msg skill"><span class="who">Skill</span>I can't write them for you, because they need to come from your thinking. But let's make it quick: what's one thing you'd need to know before you could answer your main question?</div>
+    </div>
+    <p>Sam writes three sub-questions, then decides for each where to look: education research databases, school district reports, and interviews or surveys of students.</p>
+    <p>Sam also lists what would support the thesis (before-and-after studies showing more in-person interaction) and what would complicate it (evidence that conflict moved online after school).</p>
+    <div class="exit"><strong>Exit check</strong>Sam has a research plan: sub-questions, where to look, and what would support or complicate the thesis.</div>
+  </section>
+
+  <section class="phase narrow" id="p4">
+    <span class="marker">Phase 4 of 5 · Research</span>
+    <h2>The skill searches; Sam works with the results</h2>
+    <p>The skill delivers:</p>
+    <ul class="plain">
+      <li>the sources it found, with working links</li>
+      <li>a summary of what it found and didn't find (for example, almost no long-term studies yet)</li>
+      <li>suggestions for what Sam should look into further, including asking a librarian about two paywalled journals</li>
+    </ul>
+    <p>Sam then sorts the sources by sub-question, evaluates the credibility of two of them before seeing the skill's assessment, and reflects: what's missing, what would make the research stronger, and what types of findings might weaken it.</p>
+    <div class="note">To close, the skill encourages Sam to include a disclosure describing how AI was used in the research process, and mentions that Phase 5 is available whenever Sam wants it. Sam saves the research log.</div>
+  </section>
+
+  <section class="phase narrow" id="p5">
+    <span class="marker">Phase 5 · Ongoing stress testing (optional)</span>
+    <h2>A week later</h2>
+    <p>While writing, Sam uploads the research log and one new source: a news article reporting a school district survey.</p>
+    <div class="chat">
+      <div class="msg skill"><span class="who">Skill</span>Welcome back. Last time you finished your research plan and sorted your sources. Before we start, can you restate your thesis in your own words?</div>
+    </div>
+    <p>Sam restates it. The skill asks for Sam's own read of the article's credibility first, then shares its own: the article reports a survey but doesn't say how many students responded or how they were chosen. It asks how much weight Sam's argument should place on it, and what Sam would need to find to rely on it.</p>
+    <div class="note">Sam leaves with a stronger sense of which evidence can carry the argument, and with every word of the essay still Sam's own.</div>
+  </section>
+</div>
+</body>
+</html>
