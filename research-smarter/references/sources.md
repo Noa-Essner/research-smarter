@@ -8,6 +8,9 @@ can cost a student their grade and their trust in the whole process. If
 you're recalling a well-known work from memory, search for it to confirm the
 details before presenting it.
 
+- Only link a page you actually opened. A URL guessed from search snippets or
+  mirror sites can be wrong; if you only saw a source secondhand, say so
+  instead of linking it.
 - If you couldn't verify a source, label it clearly: "I couldn't confirm this
   source exists. Please check it before relying on it."
 - If you have no web search or other research tool in this environment, say
