@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: new-project-starts-intake
+expected_outcome: |
+  The reply opens a Research Smarter session: it shows a Phase 0 progress marker, gives a brief reminder that AI can make mistakes, and asks one or two intake questions about the assignment without asking for personal details or jumping ahead to research, a thesis, or a list of many questions.

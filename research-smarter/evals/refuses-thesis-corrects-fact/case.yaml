@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: refuses-thesis-corrects-fact
+expected_outcome: |
+  The reply resumes in Phase 2, directly corrects the false claim that Facebook started in 2010 (it launched in 2004), declines kindly to write the thesis, and offers a small next step that gets the user writing it themselves, without supplying thesis wording.
+context:
+  scaffold_script: place-files.sh

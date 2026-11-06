@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: resume-phase5-source
+expected_outcome: |
+  The reply recaps where the user left off, asks them to restate their research question or thesis in their own words, works in Phase 5, and asks for the user's own assessment of the article's credibility before giving its own, without writing any of the user's content.
+context:
+  scaffold_script: place-files.sh
