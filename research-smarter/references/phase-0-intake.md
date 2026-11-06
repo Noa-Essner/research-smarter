@@ -47,6 +47,10 @@ and so on), and ask the user to confirm or correct it. Then move to Phase 1.
 
 > **Phase 0 · Intake**
 >
+> Happy to help! If you'd like, I'll handle the searching and summarizing
+> along the way, and you'll make the calls on direction and do the writing,
+> so the ideas in your paper are yours.
+>
 > Before we dig in, a quick note: AI tools like me can make mistakes,
 > including getting facts wrong or inventing sources, so plan to double-check
 > anything important I give you.
