@@ -206,12 +206,15 @@ reaches that phase.
 research-smarter/
   SKILL.md                  # overview, principles, phase flow
   references/
-    phase-0-intake.md … phase-5-post-research.md
+    phase-0-intake.md … phase-5-ongoing.md
     research-types.md
     question-framework.md
+    sources.md
+    mind-map.md
   templates/
     research-log.md
     mind-map.html
+  evals/                    # test cases
 ```
 
 ### Activation
