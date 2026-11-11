@@ -106,8 +106,11 @@ project (Sam researching school phone bans), with the mind map embedded.
 
 ## Status
 
-- The skill passes its three test cases (new project intake, declining to
-  write a thesis while correcting a fact, and resuming in Phase 5).
+- The skill has ten test cases in `research-smarter/evals/`. In the latest
+  run it passed all 48 checks in the seven newest cases, against 24 of 48
+  without the skill; the first three cases passed all 20 of theirs. Each case
+  has been run once so far. `SPEC.md` lists which requirements are tested and
+  which aren't yet.
 - The research question framework in
   `research-smarter/references/question-framework.md` is provisional and
   will be replaced with frameworks tracked as GitHub issues.

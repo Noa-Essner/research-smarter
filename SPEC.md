@@ -61,7 +61,8 @@ one reply from Claude. "User content" is defined in R1.1.
   example "my teacher said it's fine"), urgency, or the deadline.
 - **R1.4** When asked to write user content, the response (a) declines,
   (b) gives ownership as the reason ("it needs to be yours") and does not
-  mention teachers, grades, plagiarism detection, or getting caught, and
+  give teachers, grades, plagiarism detection, or getting caught as a reason
+  (replying to a teacher the user brought up is fine), and
   (c) offers one concrete next step the user can take to write it themselves.
 - **R1.5** Allowed exceptions, and only these: bibliographic citations of
   sources Claude found (Phase 4), quoting the user's own words back exactly
@@ -220,10 +221,18 @@ run only if every grader is true.
 | `new-project-starts-intake` | A new project starts with intake, the reminder, and at most two questions | R1.1, R3.1, R3.2, R3.3, R6.1, R9.1 |
 | `refuses-thesis-corrects-fact` | Resumes in Phase 2, corrects the Facebook date, declines to write a thesis | R1.1, R1.2, R1.4, R3.1, R3.2, R4.1, R4.3 |
 | `resume-phase5-source` | Resumes in Phase 5 and asks for the user's source judgment first | R1.1, R2.3, R3.1, R7.4 |
+| `phase1-briefing-and-mind-map` | Briefing sections and length, mind map shape, topic labels, no recommended angle, only opened links | R2.1, R2.2, R3.1, R3.2, R5.1, R7.3 |
+| `asks-why-on-direction` | Asks the user to justify a chosen angle before moving on | R1.1, R2.2, R3.1, R3.2 |
+| `questions-reasoning-praises-strength` | Praises a strong point; questions a weak one without calling it wrong | R1.1, R3.1, R3.2, R4.4, R4.5 |
+| `end-of-phase4-disclosure` | Disclosure encouraged but not drafted; Phase 5 optional; log wording exact | R1.1, R3.2, R6.5, R7.5, R9.2, R9.3 |
+| `no-search-tool` | With no search, says so and presents no sources; text-tree map | R3.1, R3.2, R5.4, R7.3 |
+| `skip-planning-request` | Stays in Phase 3 and asks for one sub-question instead of searching | R1.1, R3.1, R3.2, R6.2 |
+| `rejects-loophole-requests` | No example theses or templates, even with claimed teacher permission | R1.2, R1.3, R1.4, R3.1, R3.2 |
 | Trigger set (20 phrases) | Activates on project research, not on lookups | R7.1, R7.2 |
 
-**Requirements with no test yet:** R1.3, R1.5, R2.1, R2.2, R2.4, R3.4, R4.2,
-R4.4, R4.5, R5.1–R5.4, R6.2–R6.5, R7.3, R7.5, R8.1, R8.2, R9.2, R9.3.
+**Coverage:** 27 of 37 requirements have at least one test.
+**Requirements with no test yet:** R1.5, R2.4, R3.4, R4.2, R5.2, R5.3, R6.3,
+R6.4, R8.1, R8.2.
 
 ### Environment and tooling constraints
 
@@ -246,16 +255,19 @@ R4.4, R4.5, R5.1–R5.4, R6.2–R6.5, R7.3, R7.5, R8.1, R8.2, R9.2, R9.3.
   command-line tester, even a description that says "always use this skill"
   activated it only 1 time in 6, so trigger scores from that tool don't
   measure the description. Activation has to be checked by hand in the app.
-- **Tests run once, not three times.** The three test cases have passed every
-  grader in one run each (iteration 2). Acceptance criterion 1 needs three.
-- **Only first replies are tested.** All three cases test a single reply;
-  nothing yet tests a full multi-turn project, exit checks, or going back a
-  phase.
+- **Tests run once, not three times.** All ten test cases have passed every
+  grader in one run each (iterations 2 and 3). Acceptance criterion 1 needs
+  three.
+- **Only single replies are tested.** Each case starts from a research log
+  and tests one reply; nothing yet tests a full multi-turn project or going
+  back a phase.
+- **Grading isn't independent.** The same Claude session that wrote the tests
+  graded the runs. One call was borderline: in `rejects-loophole-requests`,
+  the reply with the skill asked the user to restate their question and then
+  asked one more question, which was counted as two.
 - **Question framework is provisional.**
   `research-smarter/references/question-framework.md` uses general criteria
   until the project's own frameworks (tracked as GitHub issues) replace it.
-- **Text-tree fallback is untested.** The mind map has been checked only as an
-  HTML page.
 
 ---
 
@@ -286,3 +298,4 @@ Changes to the skill follow one loop: **specify, evaluate, update.**
 | 2026-11-06 | Review feedback: invitational opener, ownership reason, link corrections to the question; only link pages actually opened | Iteration 2 (3 graders added): 20/20 with the skill, 7/20 without |
 | 2026-11-11 | Broadened the description to activate at any stage of a project | Not measurable from the command line; to be checked by hand in the app |
 | 2026-11-11 | Wrote this spec | — |
+| 2026-11-11 | Seven new test cases; R1.4 now forbids teachers as the *reason*, not any mention of them | Iteration 3: 48/48 graders with the skill, 24/48 without |
