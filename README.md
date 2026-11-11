@@ -97,6 +97,7 @@ research-smarter/          the skill itself
 ├── templates/             research log and the 3D mind map page
 └── evals/                 test cases with grading criteria
 DESIGN.md                  the full design document, with an example walkthrough
+SPEC.md                    testable requirements, acceptance criteria, known issues
 prototypes/                standalone mind map demo and walkthrough page
 ```
 
