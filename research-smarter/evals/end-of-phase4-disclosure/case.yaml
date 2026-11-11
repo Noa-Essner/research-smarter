@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: end-of-phase4-disclosure
+expected_outcome: |
+  The reply closes Phase 4: it encourages the user to write their own AI-use
+  disclosure without drafting it, presents Phase 5 as available but optional,
+  and offers an updated research log whose question and position match the
+  user's wording exactly, without repeating a general AI disclaimer.
+context:
+  scaffold_script: place-files.sh

@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: phase1-briefing-and-mind-map
+expected_outcome: |
+  The reply starts Phase 1: a briefing of roughly 300-500 words with the four
+  labeled sections, an interactive mind map (HTML from the template, or a text
+  tree) with 4-6 angles of 2-3 narrower angles each, topic labels rather than
+  research questions, no recommendation of which angle to pick, and only links
+  to pages actually opened.
+context:
+  scaffold_script: place-files.sh

@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: questions-reasoning-praises-strength
+expected_outcome: |
+  The reply acknowledges that the sleep point is well reasoned and says why,
+  then questions the social-life claim (one school, other causes) with
+  questions rather than telling the user they are wrong, without naming a
+  fallacy yet or writing any thesis wording.
+context:
+  scaffold_script: place-files.sh
