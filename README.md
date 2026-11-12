@@ -55,14 +55,20 @@ time, and you decide when to move on.
 
 ## Installing
 
-**Claude app (claude.ai or desktop):** zip the `research-smarter/` folder
-(or use a packaged `research-smarter.skill` file) and upload it in Claude's
-settings under Skills. Skills need code execution to be turned on.
+**Claude app (claude.ai, desktop, or Cowork):**
 
-To build the package from this repo, leaving out the test cases:
+1. Turn on code execution ("Create and edit files") in Settings >
+   Capabilities. On Team and Enterprise plans, an admin may need to allow
+   skills first.
+2. Go to Customize > Skills, click **+**, choose **Create skill**, then
+   **Upload a skill**, and pick `research-smarter.zip`.
+3. Make sure the skill is switched on in your skills list, then start a new
+   chat.
+
+To build the zip from this repo, leaving out the test cases:
 
 ```bash
-zip -r research-smarter.skill research-smarter -x "research-smarter/evals/*" "*.DS_Store"
+zip -r research-smarter.zip research-smarter -x "research-smarter/evals/*" "*.DS_Store"
 ```
 
 **Claude Code:** copy the folder into your skills directory.
