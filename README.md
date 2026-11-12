@@ -55,6 +55,14 @@ time, and you decide when to move on.
 
 ## Installing
 
+**Download:** get the latest version from the
+[Releases page](https://github.com/Noa-Essner/research-smarter/releases/latest),
+or directly:
+[research-smarter.zip](https://github.com/Noa-Essner/research-smarter/releases/latest/download/research-smarter.zip)
+(skill) or
+[research-smarter-plugin.zip](https://github.com/Noa-Essner/research-smarter/releases/latest/download/research-smarter-plugin.zip)
+(Cowork plugin).
+
 **Claude app (claude.ai, desktop, or Cowork):**
 
 1. Go to Customize > Skills, click **+**, choose **Create skill**, then
