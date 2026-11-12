@@ -73,16 +73,17 @@ cp -r research-smarter ~/.claude/skills/
 
 ## Using it
 
-Ask for help with a research project and use the word "research", at any
-stage. For example:
+Say you want to research something, at any stage, for school or your own
+curiosity. A topic alone is enough. For example:
 
+- "I want to research coffee"
 - "Help me research four-day school weeks for my AP Seminar project"
 - "I'm starting research for my senior thesis and don't know where to begin"
 - "Found a source for my research paper, can you help me look at it?"
 - "Continue my research" (and attach your research log)
 
-Casual questions that just mention research, such as "what does research
-say about coffee?", get a normal answer instead.
+If you just want an answer, such as "what does research say about
+intermittent fasting?", Claude answers normally instead.
 
 Searching for sources needs web search turned on. Without it, Claude says
 so and focuses on the thinking phases, pointing you to where to search.

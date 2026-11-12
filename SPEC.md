@@ -135,13 +135,15 @@ one reply from Claude. "User content" is defined in R1.1.
 
 ### R7 · Activation, resuming, and outputs
 
-- **R7.1** The skill activates when the user mentions "research" (or
-  researching, my research) about a project or assignment of their own, at
-  any stage, or uploads a Research Smarter research log.
-- **R7.2** The skill does not activate when "research" only means looking
-  something up (quick factual questions, shopping, travel), or for
-  proofreading, citation formatting, summarizing a paper, explaining research
-  concepts, or workplace market research.
+- **R7.1** The skill activates whenever the user says they want to research
+  something or asks for help researching, in any wording, even if they give
+  only a topic and no assignment (for example "I want to research coffee").
+  It also activates at any stage of a research project, for "continue my
+  research", and when the user uploads a Research Smarter research log.
+- **R7.2** The skill does not activate when the user wants an answer rather
+  than to do research ("what does research say about X?", "is there research
+  showing X?"), or for shopping, travel, proofreading, citation formatting,
+  summarizing a paper, or explaining research methods.
 - **R7.3** In Phase 1 the response presents a mind map: an HTML artifact or
   file built from the template if the environment supports one, otherwise a
   text tree. It has 4–6 top-level angles, each with 2–3 narrower angles, and
@@ -207,12 +209,13 @@ run only if every grader is true.
 | Use case | Starting point | Expected path |
 |---|---|---|
 | Starting from nothing | "I need to research X for my class" | Phase 0 → 1 → 2 → 3 → 4, Phase 5 offered |
+| Just a topic | "I want to research coffee" | Skill activates; intake finds out what the project is |
 | Arriving with a question | User already has a research question | Question checked, then Phase 2 |
 | One piece only | "Can you help me find sources for my research paper?" | Skill activates; intake, then the earliest phase that's missing |
 | Resuming | "Continue my research" plus a log | Recap, restatement, continue at the logged step |
 | Testing one argument or source | A finished user brings one claim or source | Phase 5 |
 | Asking for the answer | "Just write my thesis" | Declined per R1.4; smallest next step offered |
-| Not a research project | "What does research say about coffee?" | Skill does not activate; normal answer |
+| Wants an answer, not to research | "What does research say about intermittent fasting?" | Skill does not activate; normal answer |
 
 ### Test cases
 
@@ -299,3 +302,4 @@ Changes to the skill follow one loop: **specify, evaluate, update.**
 | 2026-11-11 | Broadened the description to activate at any stage of a project | Not measurable from the command line; to be checked by hand in the app |
 | 2026-11-11 | Wrote this spec | — |
 | 2026-11-11 | Seven new test cases; R1.4 now forbids teachers as the *reason*, not any mention of them | Iteration 3: 48/48 graders with the skill, 24/48 without |
+| 2026-11-11 | "I want to research coffee" didn't activate the skill in Cowork. Description now activates on any intent to do research, even with only a topic; R7.1 and R7.2 updated | To be checked by hand in Cowork |

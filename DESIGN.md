@@ -219,11 +219,11 @@ research-smarter/
 
 ### Activation
 
-The skill runs only when the user asks for help with a research project using
-the keyword "research," for example "help me research X" or "continue my
-research." It does not run for casual or factual questions that happen to
-mention research, such as "what does research say about coffee?" Those get a
-normal answer.
+The skill runs whenever the user says they want to research something, using
+the keyword "research," even if they give only a topic, for example "I want
+to research coffee," "help me research X," or "continue my research." It
+does not run when the user just wants an answer, such as "what does research
+say about intermittent fasting?" Those get a normal answer.
 
 ### Saving and resuming
 
