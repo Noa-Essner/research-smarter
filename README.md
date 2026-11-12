@@ -57,13 +57,15 @@ time, and you decide when to move on.
 
 **Claude app (claude.ai, desktop, or Cowork):**
 
-1. Turn on code execution ("Create and edit files") in Settings >
-   Capabilities. On Team and Enterprise plans, an admin may need to allow
-   skills first.
-2. Go to Customize > Skills, click **+**, choose **Create skill**, then
+1. Go to Customize > Skills, click **+**, choose **Create skill**, then
    **Upload a skill**, and pick `research-smarter.zip`.
-3. Make sure the skill is switched on in your skills list, then start a new
+2. Make sure the skill is switched on in your skills list, then start a new
    chat.
+
+On Team and Enterprise plans, an admin may need to allow user-created skills
+(Organization settings > Plugins & skills). In Cowork you can also install it
+as a plugin: Customize > Plugins > Add > Upload plugin. A plugin zip holds
+`.claude-plugin/plugin.json` and the skill under `skills/research-smarter/`.
 
 To build the zip from this repo, leaving out the test cases:
 
